@@ -1,0 +1,6 @@
+Two terms unify if they are equal or if the variables can be instantiated so that they are equal.
+Two complex terms will unify if they have the same functor and arity and if the corresponding terms can be unified.
+
+We can check if two terms can be unified with the =/2 predicate.
+
+Prolog backtracks when given a query to try and find a unification in a tree search like manner.

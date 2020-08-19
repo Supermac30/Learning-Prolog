@@ -1,0 +1,69 @@
+# Working With Files
+## Splitting Programs over Files
+
+We can consult a file by using the [Filename1] command.
+We can consult multiple files by using 
+[Filename1, Filename2, ..., FilenameN].
+We can use the ensure_loaded/1 predicate to only load a 
+file if it has been already loaded.
+
+## Modules
+
+If different files have the same predicate defined
+differently then we have to ensure that they do not
+override each other. We can call the file as a module 
+do this. module(ModuleName, ListOfPredicatesToExport) 
+does this. Using the predicate use_module(ModuleName) 
+all the predicates are imported. 
+
+We can import a library with use_module(library(LibraryName))
+
+## Writing to Files
+
+To write to a file we need to associate a stream with it.
+We so this with the open predicate. 
+
+e.g.
+open(FileName, write, Stream).
+write(Stream, Text), nl(Stream).
+close(Stream).
+
+If a file with the specified file name doesn't exist, then
+it will be created.
+
+## Reading From Files
+
+We cam use the open predicate in read mode to read from 
+a file.
+
+e.g. 
+open(FileName, read, Stream).
+read(Stream, Text).
+close(Stream).
+write(Stream).
+
+The predicate at_end_of_stream checks whether the end of 
+a stream has been reached.
+
+The read predicate can only recognise Prolog syntax. To
+be able to read arbitrary input we need to use the 
+get_code predicate which takes in a single character.
+We can use it to build words.
+
+e.g.
+readWord(InStream,W):-
+        get_code(InStream,Char),
+        checkCharAndReadRest(Char,Chars,InStream),
+        atom_codes(W,Chars).
+
+checkCharAndReadRest(10,[],_):-  !.
+
+checkCharAndReadRest(32,[],_):-  !.
+
+checkCharAndReadRest(-1,[],_):-  !.
+
+checkCharAndReadRest(end_of_file,[],_):-  !.
+
+checkCharAndReadRest(Char,[Char|Chars],InStream):-
+        get_code(InStream,NextChar),
+        checkCharAndReadRest(NextChar,Chars,InStream).

@@ -1,0 +1,12 @@
+# Recursion
+
+    It is possible to define predicates recursively.
+however, when doing so we have to remember to always have, in the procedural sense, a base case.
+
+e.g. p :- p will loop unendingly for obvious reasons when ?- p is called
+
+    Prolog will always try to prove the first statement in a series of statements before moving onto the next,
+if the first statement is recursive in nature then the program will loop endlessly. Prolog is left recursive.
+
+    While prolog is a logic programming language, it is not a purely logical. It has procedural elements as well.
+for example, it reads data from top to bottom and can get stuck in infinite loops if the rules are ordered incorrectly.

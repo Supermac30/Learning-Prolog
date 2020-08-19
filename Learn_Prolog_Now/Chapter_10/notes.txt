@@ -1,0 +1,66 @@
+# Cuts and Negation
+## Cuts
+
+A cut is a special atom that gives us greater control
+over prolog's backtracking. By inserting a '!' in a 
+clause we stop prolog from backtracking to a statement 
+behind the '!', essentially cutting the search tree.
+
+Consider the clause q:- p1, ..., pn, !, r1, ..., rm.
+Once the '!' is reached prolog cannot go back to 
+p1, ..., pn and is now committed to using this 
+particular clause for q. Prolog is free to backup to 
+clauses it reached before reaching the goal q.
+
+## Using Cuts
+
+A red cut is a cut that changes the function of the code.
+A green cut is one that, if it where not there, the code
+would function the same. Green cuts should be used
+whenever possible and red cuts should only be used 
+when absolutely necissary. It is a good idea to explicitly 
+comment on any red cuts.
+
+An example of an application of cuts would be to find 
+the maximum of two numbers. We can define a clause max/3
+that does this for us.
+
+max(X, Y, Y) :- Y >= X. 
+max(X, Y, X) :- X > Y.
+
+But notice that if prolog was looking for different
+possibilities after succeeding in finding max(X, Y, Y)
+to be true it would check max(X, Y, X). To solve this 
+inefficieny we would need to stop prolog from backtracking
+if it found the first clause to be true like so:
+
+max(X, Y, Y) :- Y >= X, !. 
+max(X, Y, X) :- X > Y.
+
+The cut above is green. Notice that the second line is
+redundant, however, as if the first line fails the
+second has to be true. With a small adjustment we can
+increase its efficiency:
+
+max(X, Y, Z) :- Y >= X, !, Z = Y.
+max(X, Y, X).
+
+Note, now the cut is red.
+
+## Negation as Failure
+
+Cuts, combined with the predicate fail/0 can lead to
+some powerful code. For instance, if we wanted a goal
+to only fail if some term was true then we
+could simply state:
+
+neg(Goal) :- Goal, !, fail.
+neg(Goal).
+
+If Goal is true the program passes the cut and cannot 
+return. Otherwise it reaches the next statement which 
+forces it to be true.
+
+We can use this neg predicate to force statements to 
+be false in our definition of predicates. We don't need 
+to define neg/1 ourselves as its built in as \+.

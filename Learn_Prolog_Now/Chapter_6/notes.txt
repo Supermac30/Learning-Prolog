@@ -1,0 +1,40 @@
+# Lists 1
+
+## Appending to a List
+
+We can define a predicate that appends two lists together
+
+append([], L, L).
+append([H|T], L1, [H|L2]) :- append(T, L1, L2).
+
+We can use append to break a list apart as well
+e.g. append(X, Y, [1, 2, 3]) will return all possible
+lists X and Y that break apart the last list.
+Using this idea we can check if a list is a prefix or suffix of another.
+
+prefix(P, L) :- append(P, _, L).
+suffix(S, L) :- append(_, S, L).
+
+We can use these definitions to define a sublist of a list in prolog.
+sublist(SubL, L) :- suffix(S, L), prefix(SubL, S)
+
+## Reversing a List
+
+We could solve this problem naively with the append 
+predicate.
+
+naiverev([], []).
+naiverev([H|T], R) :-
+    naiverev(T, RevT),
+    append(RevT, [H], R).
+
+A better way of doing this would be to use an accumulator.
+
+accRev([H|T], A, R) :- accRev(T, [H|A], R).
+accRev([], A, A).
+
+We can write a predicate which carries out the code 
+without an accumulator.
+
+rev(L, R) :- accRev(L, [], R)
+

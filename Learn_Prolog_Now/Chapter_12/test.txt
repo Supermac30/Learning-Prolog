@@ -1,0 +1,11 @@
+s(
+  np(
+     det(the)
+     adj([])
+     n(men))
+  vp(
+     v(shoot)
+     np(
+        det(the)
+        adj([])
+        n(men))))

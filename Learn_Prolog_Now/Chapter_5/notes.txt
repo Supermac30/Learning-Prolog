@@ -1,0 +1,44 @@
+# Arithemtic
+We can perform addition, multiplication, division, subtraction, and find remainders (with mod(m, n))
+in prolog. To do this we use the keyword 'is'. Prolog uses standard convention for the order of arithmetic operations.
+Integer division doesn't result in a float, rather it is rounded.
+
+Prolog treats arithemtical operations as functors with an
+arity of two. 'is' forces prolog to ignore the logic programming
+paradigm and evaluate an expression. Instead of calling them out in the usual
+form for binary operators we can use prolog's functor notation
+e.g. ?- is(X, -(5, 2)). returns X = 3.
+
+We can use arithmetic to gain useful facts about data structures.
+For example, to find the length of a list we can perform:
+
+len([], 0).
+len([_|T], N) :- len(T, X), N is X+1
+
+## Accumulators
+
+We can also find the length of a list using a variable
+that accumulates. For example, define the predicate accLen(List, Acc, Length) such that
+
+accLen([_|T], A0, L) :- A1 is A0+1, accLen(T, A1, L).
+accLen([], L, L).
+
+By initialising the accumulator to 0 we should get the 
+length of list stored in L.
+
+The reason accumulators are more efficient than their 
+non-accumulator counterparts is because they are tail 
+recursive which means we do not need to store the state 
+of each variable in each level of recursion, once the 
+final answer is found we can simply carry it up.
+
+## Comparing Integers
+
+We can use inequalities to compare numbers. =< and >= 
+are used rather than <= and >= to compare using equal to 
+or greater/less than. =:= is used for equality and =\= 
+is used for non-equality. Note = unifies arguments, =:= 
+forces an arithemtical evaluation.
+
+When using variables in an arithemtical evaluation, we 
+must insure they are instantiated to integers.

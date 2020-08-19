@@ -1,0 +1,31 @@
+# Lists 0
+
+Stores a list of items. Can be specified by enclosing comma
+seperated items with square brackets
+
+e.g. [1, 2, hi, X, succ(0), [], [hi, bye]]
+
+Lists in prolog are thought of as containing two parts
+a head, which is the first element, and a tail, a list of everything else.
+In a list with one element the tail is the empty list [].
+In the empty list the tail and head aren't defined.
+
+The built in operator | is used for querying lists. 
+
+e.g. ?- [H|T] = [a, b, c]. returns H = a; T = [b, c].
+
+The | operator can be used to split a list at any point.
+
+## Anonymous Variables
+
+The variable _ can take the place of unused variables 
+that we do not need to be defined.
+
+e.g. ?- [_, _, X | _] = [a, b, c, d]. returns X = c. only
+
+## Members
+
+To check if a term is a member of a list we can define a simple member relation
+
+member(X, [X|_]).
+member(X, [_|T]) :- member(X, T).

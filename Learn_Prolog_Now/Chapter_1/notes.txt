@@ -1,0 +1,19 @@
+There are only three basic constructs in prolog:
+facts, rules, and queries
+
+A knowledge base is a collection of rules and facts.
+
+Variables start with uppercase letters or underscores, semicolons mean or
+colons mean and.
+
+A deduction is called a Modus Ponens
+
+We can query ?- type(Variable) and prolog will return
+an example of an object that satisfies the type. Typing
+; will return another answer.
+
+Atoms are strings essentially.
+functors are used to refer to atoms at the start of a line,
+e.g. type(a, b). has the functor type/2
+The arity of a functor is how many arguments it accepts which is appended to the end of its name.
+Predicates with different aritys are treated as different functors.

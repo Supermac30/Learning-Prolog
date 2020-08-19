@@ -1,0 +1,52 @@
+# A Closer Look at Terms
+
+a = X instantiates variables while a == X checks for
+equality. \== checks for non-equality. Comparing two 
+uninstantiated variables with == returns false, while
+comparing two uninstantiated variables with \== returns
+true.
+
+Note =:= if for comparing arithmetic, while == compares
+the arguments themselves.
+
+Lists internally are stored as a combination of the
+empty list [] and the full stop functor of arity 2 which
+appends to a list. 
+e.g. ?- .(a, .(b, .(.(a, []), []))) == [a, b, [a]]. is true
+
+Prolog has built in predicates which determine the type
+of term something is.
+
+atom/1 determines if the argument is an atom
+integer/1 determines if the argument is an integer
+float/1 determines if the argument is a floating point number
+number/1 determines if the argument is either an integer or a floating point number.
+atomic/1 determines if the argument is a constant
+var/1 determines if the argument is an uninstantiated variables
+nonvar/1 determines if the argument is not an uninstantiated variable
+
+The predicate functor/3 tells us what the functor and
+arity of a complex term. 
+e.g. ?- functor(f(a, b), F, A). returns A=2 F=f
+
+The predicate arg(N, Complex, X) sets X to be the Nth
+argument in the complex term Complex. The predicate
+=../2 returns a list of all the terms with the head being
+the name of the functor.
+
+Strings are stored as character lists where each term
+is an integer storing the ascii code of the character.
+atom_codes/2 converts atoms to strings.
+
+By using the argument :- op(Precedence, Type, Name) 
+we can define our own infix, prefix, and postfix 
+operators in prolog. The types can be one of the 
+following: xfx, xfy, yfx, yf, xf, fx, fy; where f
+is the predicate, x is an argument with lower precedence
+than f, and y is an argument if lower or equal precedence.
+
+We can write to the screen with display/2 which shows 
+us how prolog stores the predicate internally, and 
+write/2 which prints the term to the screen exactly.
+tab(n) prints n spaces onto the screen and nl prints
+a new line.

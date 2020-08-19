@@ -1,0 +1,110 @@
+# More Definite Clause Grammars
+
+We can add different features to differentiate different
+kinds of variables. e.g. if we wanted a pronoun
+to act differently if it were a subject or an object
+we would do:
+
+s  -->  np(subject),vp.
+
+np(_)  -->  det,n.
+np(X)  -->  pro(X).
+
+vp  -->  v,np(object).
+vp  -->  v.
+
+det  -->  [the].
+det  -->  [a].
+
+n  -->  [woman].
+n  -->  [man].
+
+pro(subject)  -->  [he].
+pro(subject)  -->  [she].
+pro(object)  -->  [him].
+pro(object)  -->  [her].
+
+v  -->  [shoots].
+
+Clauses with an extra argument are translated internally
+e.g. from 
+s  -->  np(subject),vp. 
+to 
+s(A,B)  :-
+    np(subject,A,C),
+    vp(C,B).
+
+We can build a parse tree through the DCG by adding extra
+arguments. 
+
+s(s(NP,VP))  -->  np(NP),vp(VP).
+
+np(np(DET,N))  -->  det(DET),n(N).
+
+vp(vp(V,NP))  -->  v(V),np(NP).
+vp(vp(V))        -->  v(V).
+
+det(det(the))  -->  [the].
+det(det(a))      -->  [a].
+
+n(n(woman))  -->  [woman].
+n(n(man))      -->  [man].
+
+v(v(shoots))  -->  [shoots].
+
+By asking queries like ?- s(T, S, []). we get a parse tree
+in T and a string in S.
+
+Using extra arguments we can now build non-regular languages
+with a DCG. Using a successor functor we can store numbers 
+in our arguments.
+
+## Extra Goals
+
+We can add extra goals in our DCGs using curly brackets.
+e.g.
+
+s  -->  ablock(Count),bblock(Count),cblock(Count).
+
+ablock(0)  -->  [].
+ablock(NewCount)  -->  [a],ablock(Count),
+                        {NewCount  is  Count  +  1}.
+
+bblock(0)  -->  [].
+bblock(NewCount)  -->  [b],bblock(Count),
+                        {NewCount  is  Count  +  1}.
+
+cblock(0)  -->  [].
+cblock(NewCount)  -->  [c],cblock(Count),
+                        {NewCount  is  Count  +  1}.
+
+We can use extra goals to remove terminal symbols from 
+our DCGs and still generate the same languages. By using
+a lex\2 predicate defined like so:
+
+lex(the,det).
+lex(a,det).
+lex(woman,n).
+lex(man,n).
+lex(shoots,v).
+
+We can replace the DCG in the beginning with:
+
+np  -->  det,n.
+
+vp  -->  v,np.
+vp  -->  v.
+
+det  -->  [Word],{lex(Word,det)}.
+n  -->  [Word],{lex(Word,n)}.
+v  -->  [Word],{lex(Word,v)}.
+
+The main reason for doing this is to apply greater focus
+on the rules than the ending lexicons as that is where 
+the most interesting part of the grammar lies. Terminal
+symbols are a distraction from the interesting 
+parts of the grammar.
+
+Furthermore, it is more practical to build a database
+of lexicons when working with large repositories of 
+words.

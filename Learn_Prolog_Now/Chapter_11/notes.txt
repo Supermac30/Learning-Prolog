@@ -1,0 +1,80 @@
+# Database Manipulation and Collecting Solutions
+## Database Manipulation
+
+The predicate 'assert.' adds a clause into the database.
+It always succeeds. We can assert both facts and rules.
+We can remove from the database with the 'retract.' predicate. 
+We can retract multiple values at once using variables.
+The built in predicate 'listing.' returns all
+assertions in our database.
+
+This means that some predicates will be changed during 
+the runtime of the program, these are called dynamic predicates.
+Predicates that do not change are called static predicates.
+Dynamic predicates must be marked, e.g. :- dynamic pred(_).
+
+We can be more specific about where the data is placed
+in the database by using assertz which places the data
+at the end, and asserta which places it at the start.
+
+We can use database manipulation to store results. This 
+makes computing recursive functions easier as now
+we can compute them dynamically.
+
+## Collecting Solutions
+
+The query 'findall(Object, Goal, List).' produces a
+list of objects that satisfy a goal.
+
+e.g. Given the following database
+child(martha,charlotte).
+child(charlotte,caroline).
+child(caroline,laura).
+child(laura,rose).
+descend(X,Y)  :-  child(X,Y).
+descend(X,Y)  :-  child(X,Z), descend(Z,Y).
+
+?- findall(X, descend(martha, X), Z).
+returns Z = [charlotte,caroline,laura,rose].
+
+The predicate bagof/3 essentially does the exact same
+thing as findall but seperates results based on the 
+values of other variables.
+
+e.g.
+addsToNum(L, N, P) :- addsToNumAcc(L, 0, N, [], P).
+
+addsToNumAcc([], N, N, P, P).
+
+addsToNumAcc([H|L], NumA, Add, PA, P) :-
+    New is NumA + H,
+    addsToNumAcc(L, New, Add, [H|PA], P).
+
+addsToNumAcc([_|L], NumA, Add, PA, P) :-
+    addsToNumAcc(L, NumA, Add, PA, P).
+
+?- bagof(P, addsToNum([1, 2, 3], X, P), L).
+X = 0,
+L = [[]] ;
+X = 1,
+L = [[1]] ;
+X = 2,
+L = [[2]] ;
+X = 3,
+L = [[2, 1], [3]] ;
+X = 4,
+L = [[3, 1]] ;
+X = 5,
+L = [[3, 2]] ;
+X = 6,
+L = [[3, 2, 1]].
+
+Notice how we can use a bagof in a findall to create 
+a list of lists of possibilies.
+
+e.g.
+?- findall(L, bagof(P, addsToNum([1, 2], X, P), L), Z).
+Z = [[[]], [[1]], [[2]], [[2, 1]]].
+
+The setof/3 predicate does the same thing as bagof but
+orders each set and makes every element unique.
